@@ -32,7 +32,7 @@ public class PeriodAdapter extends ArrayAdapter<Period> {
         this.inflater = LayoutInflater.from(context);
         myVM = ViewModelProviders.of((FragmentActivity) activity).get(LogicVM.class);
     }
-    public View getView( int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         View view=inflater.inflate(this.layout, parent, false);
 
@@ -52,7 +52,10 @@ public class PeriodAdapter extends ArrayAdapter<Period> {
         view.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
+                if(position==0)
+                {
                 myVM.skipPeriod(getContext(),period);
+                }
             }
         });
 

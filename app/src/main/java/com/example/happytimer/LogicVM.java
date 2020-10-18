@@ -26,14 +26,15 @@ public class LogicVM extends ViewModel {
         return liveDataPeriodList;
     }
 
-    public void addPeriodList(Context context, String t,int s, int tId) {
+    public void addPeriodList(Context context, String t,int s,String colour, int tId) {
         DataBaseHelper db = new DataBaseHelper(context);
 
         String title = t;
         int seconds = s;
         int timerId = tId;
 
-        Period period = new Period(title,seconds,timerId);
+
+        Period period = new Period(title,seconds,colour,timerId);
         db.addPeriod(period);
         ArrayList<Period> b=db.getPeriods(timerId);
         liveDataPeriodList.postValue(b);
@@ -43,9 +44,9 @@ public class LogicVM extends ViewModel {
         liveDataPeriodList.postValue(periods);
     }
 
-    public void setList(Context context,String title,String colour) {
+    public void setList(Context context,String title) {
         DataBaseHelper db = new DataBaseHelper(context);
-        addDbTimer(context,title,colour);
+        addDbTimer(context,title);
         ArrayList<Timer>  b=db.getAllTimers();
         liveDataList.postValue(b);
     }
@@ -57,24 +58,24 @@ public class LogicVM extends ViewModel {
         liveDataList.postValue(b);
     }
 
-    public void addDbTimer(Context context,String t,String c){
+    public void addDbTimer(Context context,String t){
         DataBaseHelper db = new DataBaseHelper(context);
 
         String title = t;
-        String colour = c;
 
-        if(title.equals("") || colour.equals("")) {
+
+        if(title.equals("")) {
             Toast.makeText(context.getApplicationContext(),
                     "Please enter title", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Timer timer = new Timer(title,colour);
+        Timer timer = new Timer(title);
         db.addTimer(timer);
     }
 
     public void skipPeriod(Context context,Period period) {
-
+        try{
         ArrayList<Period> b = liveDataPeriodList.getValue();
         if(b==null)
         {
@@ -87,7 +88,7 @@ public class LogicVM extends ViewModel {
             }
         }
         b.remove(period);
-        liveDataPeriodList.postValue(b);
+        liveDataPeriodList.postValue(b);}catch (Exception e){}
     }
 
     public void deletePeriod(Context  context,Period period) {

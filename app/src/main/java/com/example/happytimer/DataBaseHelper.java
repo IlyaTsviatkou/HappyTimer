@@ -17,7 +17,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "Timer_List";
+    private static final String DATABASE_NAME = "Timer";
 
     // Table name: timer.
     private static final String TABLE_TIMER = "Timer";
@@ -25,7 +25,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String COLUMN_TIMER_ID ="Timer_Id";
     private static final String COLUMN_TIMER_TITLE ="Timer_Title";
-    private static final String COLUMN_TIMER_COLOUR = "Timer_Colour";
+    private static final String COLUMN_PERIOD_COLOUR = "Period_Colour";
     private static final String COLUMN_PERIOD_ID ="Period_Id";
     private static final String COLUMN_PERIOD_TITLE ="Period_Title";
     private static final String COLUMN_PERIOD_TIMER = "Period_Timer";
@@ -40,11 +40,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         // Script to create table.
         String script = "CREATE TABLE " + TABLE_TIMER + "("
-                + COLUMN_TIMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_TIMER_TITLE + " TEXT,"
-                + COLUMN_TIMER_COLOUR + " TEXT" + ")";
+                + COLUMN_TIMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_TIMER_TITLE + " TEXT"
+               + ")";
         String script2 = "CREATE TABLE "+ TABLE_PERIOD + "("
                 + COLUMN_PERIOD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_PERIOD_TITLE + " TEXT,"
-                + COLUMN_PERIOD_TIMER + " INTEGER," + COLUMN_TIMER_ID + " REFERENCES Timer(Timer_Id)" + ")";
+                + COLUMN_PERIOD_TIMER + " INTEGER," + COLUMN_PERIOD_COLOUR + " TEXT," + COLUMN_TIMER_ID + " REFERENCES Timer(Timer_Id)" + ")";
         // Execute script.
         db.execSQL(script);
         db.execSQL(script2);
@@ -70,7 +70,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_TIMER_TITLE, timer.getTitle());
-        values.put(COLUMN_TIMER_COLOUR, timer.getColour());
+
 
         // Inserting Row
         db.insert(TABLE_TIMER, null, values);
@@ -86,7 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PERIOD_TITLE, period.getTitle());
         values.put(COLUMN_PERIOD_TIMER, period.getSeconds());
         values.put(COLUMN_TIMER_ID, period.getTimerID());
-
+        values.put(COLUMN_PERIOD_COLOUR,period.getColour());
         // Inserting Row
         db.insert(TABLE_PERIOD, null, values);
 
@@ -100,14 +100,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_TIMER, new String[] { COLUMN_TIMER_ID,
-                        COLUMN_TIMER_TITLE, COLUMN_TIMER_COLOUR }, COLUMN_TIMER_ID + "=?",
+                        COLUMN_TIMER_TITLE }, COLUMN_TIMER_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
         Timer timer = new Timer(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                cursor.getString(2));
+                cursor.getString(1));
         // return timer
         return timer;
     }
@@ -118,7 +117,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_PERIOD, new String[] { COLUMN_PERIOD_ID,
-                        COLUMN_PERIOD_TITLE, COLUMN_PERIOD_TIMER,COLUMN_TIMER_ID }, COLUMN_PERIOD_ID + "=?",
+                        COLUMN_PERIOD_TITLE, COLUMN_PERIOD_TIMER,COLUMN_PERIOD_COLOUR,COLUMN_TIMER_ID }, COLUMN_PERIOD_ID + "=?",
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
@@ -126,7 +125,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Period period = new Period(Integer.parseInt(cursor.getString(0)),
                 cursor.getString(1),
                 cursor.getInt(2),
-                cursor.getInt(3));
+                cursor.getString(3),
+                cursor.getInt(4));
         // return timer
         return period;
     }
@@ -153,7 +153,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_TIMER_TITLE, timer.getTitle());
-        values.put(COLUMN_TIMER_COLOUR, timer.getColour());
+
 
         // updating row
         return db.update(TABLE_TIMER, values, COLUMN_TIMER_ID + " = ?",
@@ -176,7 +176,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 Timer timer = new Timer();
                 timer.setId(Integer.parseInt(cursor.getString(0)));
                 timer.setTitle(cursor.getString(1));
-                timer.setColour(cursor.getString(2));
                 // Adding note to list
                 timerList.add(timer);
             } while (cursor.moveToNext());
@@ -202,7 +201,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 period.setId(Integer.parseInt(cursor.getString(0)));
                 period.setTitle(cursor.getString(1));
                 period.setSeconds(cursor.getInt(2));
-                period.setTimerID(cursor.getInt(3));
+                period.setColour(cursor.getString(3));
+                period.setTimerID(cursor.getInt(4));
                 // Adding note to list
                 periodList.add(period);
             } while (cursor.moveToNext());

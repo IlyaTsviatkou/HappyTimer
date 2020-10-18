@@ -6,23 +6,25 @@
     android:layout_height="240dp">
 
 
-    <EditText
-        android:id="@+id/TextTitle"
-        android:layout_marginTop="10dp"
+    <TextView
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:layout_height="50dp"
-        />
+        android:text="Adding timer"
+        android:textSize="20dp"
+        android:textColor="@color/Black">
+    </TextView>
 
-    <Spinner
-        android:id="@+id/colour"
+    <EditText
+        android:id="@+id/TextTitle"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="70dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
+        android:hint="Enter Title" />
 
-        android:textSize="30dp"
-        android:spinnerMode="dropdown" />
+
 
     <Button
         android:id="@+id/Button1"

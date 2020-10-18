@@ -61,8 +61,8 @@ import java.util.List;
 
 
             titleView.setText(timer.getTitle());
-            colourView.setText(timer.getColour());
-            colourView.setTextColor(Color.parseColor(timer.getColour()));
+         //   colourView.setText(timer.getColour());
+           // colourView.setTextColor(Color.parseColor(timer.getColour()));
             return view;
         }
     }
